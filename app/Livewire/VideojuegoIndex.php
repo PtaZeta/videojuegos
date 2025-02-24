@@ -10,7 +10,6 @@ use Livewire\Component;
 
 class VideojuegoIndex extends Component
 {
-    public $desarrolladoras;
 
     public $videojuegoid;
 
@@ -20,15 +19,15 @@ class VideojuegoIndex extends Component
 
     public $estaEditando = false;
 
-    public function mount()
-    {
-        $this->desarrolladoras = Desarrolladora::all();
-    }
-
     public function crear()
     {
         $validated = $this->validate((new StoreVideojuegoRequest())->rules());
-        Videojuego::create($validated);
+
+        $videojuego = Videojuego::create($validated);
+
+        Auth::user()->videojuegos()->attach($videojuego);
+        $this->reiniciar();
+
     }
 
     public function editar($videojuegoid)
@@ -41,11 +40,22 @@ class VideojuegoIndex extends Component
         $this->estaEditando = true;
     }
 
+    public function eliminar($videojuegoid)
+    {
+        $videojuego = Videojuego::findOrFail($videojuegoid);
+        $videojuego->delete();
+    }
+
+    public function reiniciar()
+    {
+        $this->reset();
+    }
+
     public function render()
     {
         return view('livewire.videojuego-index', [
             'videojuegos' => Auth::user()->videojuegos,
-            'desarrolladoras' => $this->desarrolladoras,
+            'desarrolladoras' => Desarrolladora::all(),
         ]);
     }
 }

@@ -1,11 +1,10 @@
 <div>
     <div x-data="{ open: false }" class="p-6 bg-gray-900 min-h-screen text-white">
-        <!-- Formulario de CREAR -->
-        @if (!$estaEditando)
             <div class="max-w-lg mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
-                <form wire:submit.prevent="crear">
+                <form wire:submit="{{ $estaEditando ? 'editar' : 'crear' }}"">
+                    <h2>{{ $estaEditando ? 'Actualizar' : 'Crear'}} un videojuego</h2>
                     <div class="mb-4">
-                        <label for="titulo" class="block text-sm font-medium text-gray-300">titulo:</label>
+                        <label for="titulo" class="block text-sm font-medium text-gray-300">Titulo:</label>
                         <input wire:model="titulo" type="text" id="titulo" name="titulo"
                             class="mt-1 block w-full rounded-md text-black border-gray-600 bg-gray-700  shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                     </div>
@@ -15,84 +14,54 @@
                             class="mt-1 block w-full rounded-md text-black border-gray-600 bg-gray-700  shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                     </div>
                     <div>
-                        <label for="desarrolladora_id" class="block text-sm font-medium text-gray-300">Desarrolladora:</label>                        <select wire:model.live="desarrolladora_id"
-                            class="w-full p-2 bg-gray-700 border border-gray-600 text-black rounded focus:ring focus:ring-green-400">
-                            <option value="">Seleccione una asignatura</option>
+                        <label for="desarrolladora_id" class="block text-sm font-medium text-gray-300">Desarrolladora:</label>                        
+                        <select wire:model.live="desarrolladora_id"
+                            class="w-full p-2 bg-gray-700 border border-gray-600 text-white rounded focus:ring focus:ring-green-400">
+                            <option value="">Seleccione una Desarroladora</option>
                             @foreach($desarrolladoras as $desarrolladora)
                                 <option value="{{ $desarrolladora->id }}">{{ $desarrolladora->nombre }}</option>
                             @endforeach
                         </select>
                     </div>
                     <button type="submit"
-                    class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg transition duration-200">
+                    class="mt-5 px-5 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg transition duration-200">
                     Crear
-                </button>
+                    </button>
                 </form>
             </div>
-        @endif
-
-        <!-- Formulario de EDITAR -->
-        @if ($estaEditando)
-            <div class="max-w-lg mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
-                <form wire:submit.prevent="actualizar">
-                    <div class="mb-4">
-                        <label for="titulo" class="block text-sm font-medium text-gray-300">Editar titulo:</label>
-                        <input wire:model="titulo" type="text" id="titulo" name="titulo"
-                            class="mt-1 block w-full rounded-md text-black border-gray-600 bg-gray- shadow-sm focus:border-yellow-500 focus:ring focus:ring-yellow-500 focus:ring-opacity-50">
-                    </div>
-                    <div class="mb-4">
-                        <label for="anyo" class="block text-sm font-medium text-gray-300">Año:</label>
-                        <input wire:model="anyo" type="text" id="anyo" name="anyo"
-                            class="mt-1 block w-full rounded-md text-black border-gray-600 bg-gray-700  shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                    </div>
-                    <div class="flex justify-between">
-                        <button type="submit"
-                            class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg transition duration-200">
-                            Guardar cambios
-                        </button>
-                        <button wire:click.prevent="cancelar"
-                            class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg transition duration-200">
-                            Cancelar
-                        </button>
-                    </div>
-                </form>
-            </div>
-        @endif
 
         <!-- Tabla -->
-        {{-- <div class="mt-6 max-w-3xl mx-auto bg-gray-800 p-4 rounded-lg shadow-lg">
+        <div class="mt-6 max-w-3xl mx-auto bg-gray-800 p-4 rounded-lg shadow-lg">
             <table class="w-full text-left text-gray-300">
                 <thead class="bg-gray-700 text-gray-200 uppercase">
                     <tr>
-                        <th class="px-4 py-2">Denominación</th>
-                        <th class="px-4 py-2">Número de trimestres</th>
-                        <th class="px-4 py-2 text-center">Acciones</th>
+                        <th class="px-4 py-2">Título</th>
+                        <th class="px-4 py-2">Año</th>
+                        <th class="px-4 py-2">Desarrolladora</th>
+                        <th class="px-4 py-2">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($asignaturas as $asignatura)
+                    @foreach ($videojuegos as $videojuego)
                     <tr class="border-b border-gray-700 hover:bg-gray-700">
-                        <td class="px-4 py-2">bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded transition">
+                        <td class="px-4 py-2">{{ $videojuego->titulo}}</td>
+                        <td class="px-4 py-2">{{ $videojuego->anyo}}</td>
+                        <td class="px-4 py-2">{{ $videojuego->desarrolladora->nombre}}</td>
+                        <td class="px-4 py-2 flex gap-2">
+                            <button class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded transition">
                                 Editar
                             </button>
-                            @if (!$estaEditando)
-                            <button wire:click="eliminar({{ $asignatura->id }})"
-                                class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-medium rounded transition">
-                                Eliminar
-                            <a href="#" wire:click="ver({{ $asignatura->id }})" class="bg-green-500 text-white px-2 py-1 rounded cursor-pointer">
-                                {{ $asignatura->titulo}}
-                            </a>
-                        </td>
-                        <td class="px-4 py-2 text-center">{{ $asignatura->anyo}}</td>
-                        <td class="px-4 py-2 flex justify-center space-x-2">
-                            <button wire:click="editar({{ $asignatura->id }})"
-                                class="px-3 py-1
-                            </button>
-                            @endif
+                            <form wire:submit.prevent="eliminar">
+                                <button wire:click="eliminar({{ $videojuego->id }})"
+                                    type="button"
+                                    class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded transition">
+                                    Eliminar
+                                </button>
+                            </form>   
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
-            </table> --}}
+            </table>
     </div>
 </div>
