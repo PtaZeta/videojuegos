@@ -1,6 +1,7 @@
 <?php
 
-use App\Livewire\VideojuegoIndex;
+use App\Http\Controllers\VideojuegoController;
+use App\Models\Videojuego;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -13,6 +14,5 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-Route::get('/videojuegos', VideojuegoIndex::class)->name('videojuegos');
-
+Route::resource('videojuegos', VideojuegoController::class);
 require __DIR__.'/auth.php';
