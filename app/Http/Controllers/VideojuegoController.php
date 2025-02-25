@@ -37,7 +37,9 @@ class VideojuegoController extends Controller
      */
     public function show(Videojuego $videojuego)
     {
-        //
+        return view('videojuegos.show', [
+            'videojuego' => $videojuego,
+        ]);
     }
 
     /**

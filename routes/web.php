@@ -14,5 +14,8 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-Route::resource('videojuegos', VideojuegoController::class);
+
+Route::view('videojuegos/poseo', 'videojuegos.poseo')->name('videojuegos.poseo');
+Route::resource('videojuegos', VideojuegoController::class)->middleware('auth');
+
 require __DIR__.'/auth.php';
