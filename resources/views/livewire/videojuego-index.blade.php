@@ -7,6 +7,7 @@
                         <label for="titulo" class="block text-sm font-medium text-gray-300">Titulo:</label>
                         <input wire:model="titulo" type="text" id="titulo" name="titulo"
                             class="mt-1 block w-full rounded-md text-white border-gray-600 bg-gray-700  shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        @error('titulo') <span class="error">{{ $message }}</span> @enderror
                     </div>
                     <div class="mb-4">
                         <label for="anyo" class="block text-sm font-medium text-gray-300">Año:</label>

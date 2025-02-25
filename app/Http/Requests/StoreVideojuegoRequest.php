@@ -28,4 +28,11 @@ class StoreVideojuegoRequest extends FormRequest
             'desarrolladora_id' => 'required|exists:desarrolladoras,id'
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'titulo.required' => 'El titulo es obligatio',
+        ];
+    }
 }
